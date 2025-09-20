@@ -1,0 +1,86 @@
+import java.time.LocalDate;  
+
+public class Cuenta {
+
+  private String codCuenta;
+  private double saldo;
+  private String nombreCuentaHabiente;
+  private String fechaCreacion;
+  private int cantDepositosRealizados;
+  private int cantRetirosExitososRealizados;
+  private static int cantCuentasCreadas = 0;
+
+    // Constructor con solo saldo
+  public Cuenta(double pSaldo) {
+      cantCuentasCreadas = cantCuentasCreadas + 1;
+      codCuenta = "cta-" + cantCuentasCreadas;
+      saldo = pSaldo;
+      fechaCreacion = LocalDate.now().toString();
+      cantDepositosRealizados = 0;
+      cantRetirosExitososRealizados = 0;
+      nombreCuentaHabiente = "SIN NOMBRE";
+  }
+
+  // Constructor con nombre y saldo
+  public Cuenta(String pNombre, double pSaldo) {
+      cantCuentasCreadas = cantCuentasCreadas + 1;
+      codCuenta = "cta-" + cantCuentasCreadas;
+      saldo = pSaldo;
+      fechaCreacion = LocalDate.now().toString();
+      cantDepositosRealizados = 0;
+      cantRetirosExitososRealizados = 0;
+      nombreCuentaHabiente = pNombre;
+  }
+
+  // para ponerle nombre despues
+  public void setNombreCuentaHabiente(String pNombre) {
+      nombreCuentaHabiente = pNombre;
+   }
+
+  // metodos para obtener cosas
+  public String getCodCuenta() {
+      return codCuenta;
+  }
+
+  
+  public double getSaldo() {
+      return saldo;
+  }
+
+  // metodo depositar
+  public double depositar(double monto) {
+      if (monto > 0) {
+          saldo = saldo + monto;
+          cantDepositosRealizados = cantDepositosRealizados + 1;
+       }
+      return saldo;
+    }
+
+    // metodo retirar
+  public double retirar(double monto) {
+      if (monto > 0 && monto <= saldo) {
+          saldo = saldo - monto;
+          cantRetirosExitososRealizados = cantRetirosExitososRealizados + 1;
+      }
+      // si no alcanza, no hace nada y devuelve saldo igual
+      return saldo;
+    }
+
+  // metodo estatico para saber cuentas creadas
+  public static int getCantCuentasCreadas() {
+      return cantCuentasCreadas;
+  }
+
+  // toString para mostrar todo
+  public String toString() {
+      String info = "";
+      info = info + "CODIGO: " + codCuenta + "\n";
+      info = info + "SALDO: " + saldo + "\n";
+      info = info + "TITULAR: " + nombreCuentaHabiente + "\n";
+      info = info + "FECHA CREACION: " + fechaCreacion + "\n";
+      info = info + "DEPOSITOS: " + cantDepositosRealizados + "\n";
+      info = info + "RETIROS EXITOSOS: " + cantRetirosExitososRealizados + "\n";
+      return info;
+    }
+
+}
