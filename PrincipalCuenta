@@ -1,0 +1,164 @@
+import java.util.Scanner;
+public class PrincipalCuenta {
+
+  // variables globales
+  static Cuenta[] cuentas = new Cuenta[100]; // maximo 100 cuentas
+  static int totalCuentas = 0;
+  static Cuenta cuentaActual = null;
+  static Scanner teclado = new Scanner(System.in);
+
+  
+  public static void main(String[] args) {
+      
+      int opcion = -1;
+
+      while (opcion != 0) {
+          System.out.println("");
+          System.out.println("=== MENU PRINCIPAL ===");
+          System.out.println("1) Crear Cuenta");
+          System.out.println("2) Conocer la cantidad de Cuentas Creadas");
+          System.out.println("3) Listar Cuentas");
+          System.out.println("4) Seleccionar Cuenta actual");
+          System.out.println("5) Depositar");
+          System.out.println("6) Retirar");
+          System.out.println("7) Consultar Saldo");
+          System.out.println("8) Consultar Estado (toString)");
+          System.out.println("0) Salir");
+          System.out.print("Elija opcion: ");
+
+          opcion = teclado.nextInt();
+
+          if (opcion == 1) {
+              crearCuenta();
+          } else if (opcion == 2) {
+              System.out.println("Cuentas creadas: " + Cuenta.getCantCuentasCreadas());
+          } else if (opcion == 3) {
+              listarCuentas();
+          } else if (opcion == 4) {
+              seleccionarCuenta();
+          } else if (opcion == 5) {
+              depositar();
+          } else if (opcion == 6) {
+              retirar();
+          } else if (opcion == 7) {
+              consultarSaldo();
+          } else if (opcion == 8) {
+              consultarEstado();
+          } else if (opcion == 0) {
+              System.out.println("Adios :(");
+          } else {
+              System.out.println("Opcion invalida, intente de nuevo.");
+          }
+
+        }
+
+    }
+
+    
+  public static void crearCuenta() {
+      System.out.println("¿Como quiere crear la cuenta?");
+      System.out.println("1) Solo con saldo");
+      System.out.println("2) Con nombre y saldo");
+      int tipo = teclado.nextInt();
+      
+      if (tipo == 1) {
+          System.out.print("Ingrese saldo inicial: ");
+          double saldo = teclado.nextDouble();
+          Cuenta nueva = new Cuenta(saldo);
+          cuentas[totalCuentas] = nueva;
+          totalCuentas++;
+
+          System.out.println("Cuenta creada! Codigo: " + nueva.getCodCuenta());
+          System.out.print("Ahora ingrese el nombre del titular: ");
+          teclado.nextLine();
+          String nombre = teclado.nextLine();
+          nueva.setNombreCuentaHabiente(nombre);
+          System.out.println("Nombre guardado.");
+
+      } else if (tipo == 2) {
+          System.out.print("Ingrese nombre del titular: ");
+          teclado.nextLine(); // limpiar
+          String nombre = teclado.nextLine();
+          System.out.print("Ingrese saldo inicial: ");
+          double saldo = teclado.nextDouble();
+          Cuenta nueva = new Cuenta(nombre, saldo);
+          cuentas[totalCuentas] = nueva;
+          totalCuentas++;
+          System.out.println("Cuenta creada! Codigo: " + nueva.getCodCuenta());
+      } else {
+          System.out.println("Opcion no valida.");
+      }
+    }
+
+    
+  public static void listarCuentas() {
+      if (totalCuentas == 0) {
+          System.out.println("No hay cuentas.");
+          return;
+      }
+      for (int i = 0; i < totalCuentas; i++) {
+          System.out.println((i+1) + ". " + cuentas[i].getCodCuenta() + " - " + cuentas[i].getSaldo());
+      }
+  }
+
+  
+  public static void seleccionarCuenta() {
+      if (totalCuentas == 0) {
+          System.out.println("No hay cuentas para seleccionar.");
+          return;
+      }
+      listarCuentas();
+      System.out.print("Elija numero de cuenta: ");
+      int num = teclado.nextInt();
+      if (num > 0 && num <= totalCuentas) {
+          cuentaActual = cuentas[num - 1];
+          System.out.println("Cuenta seleccionada: " + cuentaActual.getCodCuenta());
+      } else {
+          System.out.println("Numero invalido.");
+      }
+  }
+
+  
+  public static void depositar() {
+      if (cuentaActual == null) {
+          System.out.println("Primero seleccione una cuenta.");
+          return;
+      }
+      System.out.print("Cuanto quiere depositar? ");
+      double monto = teclado.nextDouble();
+      double nuevoSaldo = cuentaActual.depositar(monto);
+      System.out.println("Deposito hecho. Saldo actual: " + nuevoSaldo);
+  }
+
+  
+  public static void retirar() {
+      if (cuentaActual == null) {
+          System.out.println("Primero seleccione una cuenta.");
+          return;
+      }
+      System.out.print("Cuanto quiere retirar? ");
+      double monto = teclado.nextDouble();
+      double nuevoSaldo = cuentaActual.retirar(monto);
+      System.out.println("Retiro hecho. Saldo actual: " + nuevoSaldo);
+    }
+
+    
+  public static void consultarSaldo() {
+      if (cuentaActual == null) {
+          System.out.println("Primero seleccione una cuenta.");
+          return;
+      }
+      System.out.println("SALDO ACTUAL: " + cuentaActual.getSaldo());
+    }
+
+    
+  public static void consultarEstado() {
+      if (cuentaActual == null) {
+          System.out.println("Primero seleccione una cuenta.");
+          return;
+      }
+      System.out.println("=== ESTADO DE LA CUENTA ===");
+      System.out.println(cuentaActual.toString());
+    }
+
+}
